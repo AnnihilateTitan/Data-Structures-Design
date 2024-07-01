@@ -2,17 +2,15 @@ import unittest
 import sys
 import os
 
-# 获取当前文件所在的目录
-current_dir = os.path.dirname(__file__)
+# 获取当前脚本文件的目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 获取项目根目录的路径
-project_dir = os.path.abspath(os.path.join(current_dir, '..', '..'))
-
-# 添加项目根目录到sys.path
-sys.path.insert(0, project_dir)
+# 将当前脚本文件目录的上级目录添加到系统路径
+toolbox_dir = os.path.dirname(os.path.dirname(current_dir))
+sys.path.append(toolbox_dir)
 
 # 导入需要测试的类
-from project_smart_warehouse_management.inventory.item import Item, Category, Priority
+from project_smart_warehouse_management.toolbox.inventory.item import Item, Category, Priority
 
 class TestItem(unittest.TestCase):
 
