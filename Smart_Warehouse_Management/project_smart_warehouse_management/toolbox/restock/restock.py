@@ -8,12 +8,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(project_root)
 
-# Import the PriorityQueue class from toolbox.restock.priority_list module
-from toolbox.restock.priority_list import PriorityQueue
+# Import the MinHeap class from toolbox.restock.priority_list module
+from toolbox.restock.priority_list import MinHeap
 
 # Function to predict items that need restocking based on a threshold
 def predict_restock(inventory, threshold):
-    restock_queue = PriorityQueue()  # Initialize a priority queue for restocking
+    restock_queue = MinHeap()  # Initialize a priority queue for restocking
     current = inventory.head  
     while current:
         if current.item.quantity < threshold:

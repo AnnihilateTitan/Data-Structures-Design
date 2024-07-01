@@ -56,7 +56,7 @@ class LinkedList:
         while current:
             items.append(repr(current.item))   # Append string representation of each item
             current = current.next
-        return "->".join(items)   # Join item representations with "->" for display
+        return "\n ->".join(items)   # Join item representations with "->" for display
 
     # Method to iterate over the items in the linked list
     def __iter__(self):

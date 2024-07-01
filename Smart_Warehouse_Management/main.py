@@ -13,13 +13,18 @@ from project_smart_warehouse_management.toolbox.inventory.linked_list import Lin
 from project_smart_warehouse_management.toolbox.utils.loader import load_dataset
 from project_smart_warehouse_management.toolbox.restock.restock import predict_restock
 from project_smart_warehouse_management.toolbox.inventory.category_tree import CategoryTree
+# project_smart_warehouse_management/main.py
+
 
 def main():
-    # File path, assuming it's in the same directory as main.py
-    file_path = os.path.join(os.path.dirname(__file__), 'smart_warehouse_dataset.csv')
+    # File path, assuming it's in the 'files' directory
+    file_path = os.path.join(os.path.dirname(__file__), 'files', 'smart_warehouse_dataset.csv')
 
     # Load the dataset
-    inventory = load_dataset(file_path)
+    inventory = LinkedList()
+    items = load_dataset(file_path)
+    for item in items:
+        inventory.add_item(item)
 
     # Print initial inventory
     print("Initial Inventory:")
@@ -27,19 +32,21 @@ def main():
 
     # Example of inserting an item
     new_item = Item(item_ID=11, name='Bookshelf', category=Category.FURNITURE, quantity=3, priority_level=Priority.HIGH)
+    print("\nInserting item :", new_item)
     inventory.add_item(new_item)
-    print("\nInventory after insertion:")
+    print("___\nInventory after insertion:")
     print(inventory)
 
     # Example of removing an item (assuming removing item_ID 3 which is T-Shirt)
+    print("\nRemoving item with ID 3")
     inventory.remove_item(3)
-    print("\nInventory after removal:")
+    print("___\nInventory after removal:")
     print(inventory)
 
     # Using CategoryTree to search by category
     category_tree = CategoryTree()
-    for node in inventory:
-        category_tree.insert(node.category, node)
+    for item in inventory:
+        category_tree.insert(item.category, item)
     
     # Example of searching by category
     print("\nSearching by category ELECTRONICS:")
