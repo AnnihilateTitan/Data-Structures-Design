@@ -1,58 +1,70 @@
-# main.py
 import os
 import sys
 
-# 获取当前文件所在的目录
-current_dir = os.path.dirname(__file__)
+# Set the current script file's directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 获取项目根目录的路径
-project_dir = os.path.abspath(os.path.join(current_dir))
-
-# 添加项目根目录到sys.path
-sys.path.insert(0, project_dir)
+# Add the parent directory (project root) to the system path
+project_root = os.path.dirname(os.path.dirname(current_dir))
+sys.path.append(project_root)
 
 from project_smart_warehouse_management.toolbox.inventory.item import Item, Category, Priority
 from project_smart_warehouse_management.toolbox.inventory.linked_list import LinkedList
+from project_smart_warehouse_management.toolbox.utils.loader import load_dataset
+from project_smart_warehouse_management.toolbox.restock.restock import predict_restock
+from project_smart_warehouse_management.toolbox.inventory.category_tree import CategoryTree
 
 def main():
-    # 创建一些 Item 实例
-    item1 = Item(1, "Laptop", Category.ELECTRONICS, 10, Priority.HIGH)
-    item2 = Item(2, "Chair", Category.FURNITURE, 5, Priority.MEDIUM)
-    item3 = Item(3, "T-shirt", Category.CLOTHING, 20, Priority.LOW)
+    # File path, assuming it's in the same directory as main.py
+    file_path = os.path.join(os.path.dirname(__file__), 'smart_warehouse_dataset.csv')
 
-    # 创建 LinkedList 实例
-    inventory = LinkedList()
+    # Load the dataset
+    inventory = load_dataset(file_path)
 
-    # 添加物品到链表中
-    inventory.add_item(item1)
-    inventory.add_item(item2)
-    inventory.add_item(item3)
-
-    # 打印初始库存
+    # Print initial inventory
     print("Initial Inventory:")
     print(inventory)
 
-    # 更新物品数量
-    inventory.update_quantity(2, 15)
-    print("\nInventory after updating Chair quantity to 15:")
+    # Example of inserting an item
+    new_item = Item(item_ID=11, name='Bookshelf', category=Category.FURNITURE, quantity=3, priority_level=Priority.HIGH)
+    inventory.add_item(new_item)
+    print("\nInventory after insertion:")
     print(inventory)
 
-    # 移除物品
-    inventory.remove_item(1)
-    print("\nInventory after removing Laptop:")
+    # Example of removing an item (assuming removing item_ID 3 which is T-Shirt)
+    inventory.remove_item(3)
+    print("\nInventory after removal:")
     print(inventory)
 
-    # 按名称查找物品
-    print("\nFind items by name 'Chair':")
-    items_by_name = inventory.find_by_name("Chair")
-    for item in items_by_name:
-        print(item)
+    # Using CategoryTree to search by category
+    category_tree = CategoryTree()
+    for node in inventory:
+        category_tree.insert(node.category, node)
+    
+    # Example of searching by category
+    print("\nSearching by category ELECTRONICS:")
+    electronics_items = category_tree.find_by_category(Category.ELECTRONICS)
+    print(electronics_items)
 
-    # 按类别查找物品
-    print("\nFind items by category CLOTHING:")
-    items_by_category = inventory.find_by_category(Category.CLOTHING)
-    for item in items_by_category:
-        print(item)
+    # Example of searching by name
+    print("\nSearching by name Chair:")
+    chair_items = category_tree.find_by_name('Chair')
+    print(chair_items)
 
-if __name__ == '__main__':
+    # Example of searching by item ID
+    item_id_to_find = 2  # Change to the item ID you want to search for
+    found_item = category_tree.find_by_id(item_id_to_find)
+    if found_item:
+        print(f"\nItem found with ID {item_id_to_find}:")
+        print(found_item)
+    else:
+        print(f"\nItem with ID {item_id_to_find} not found.")
+
+    # Outputting predicted restock queue
+    threshold = 10  # Set the restock threshold
+    print(f"\nPredicted restock queue (items below quantity {threshold}):")
+    restock_queue = predict_restock(inventory, threshold)
+    print(restock_queue)
+
+if __name__ == "__main__":
     main()
