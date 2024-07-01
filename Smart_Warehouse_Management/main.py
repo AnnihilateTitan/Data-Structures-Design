@@ -11,8 +11,8 @@ project_dir = os.path.abspath(os.path.join(current_dir))
 # 添加项目根目录到sys.path
 sys.path.insert(0, project_dir)
 
-from project_smart_warehouse_management.inventory.item import Item, Category, Priority
-from project_smart_warehouse_management.inventory.linked_list import LinkedList
+from project_smart_warehouse_management.toolbox.inventory.item import Item, Category, Priority
+from project_smart_warehouse_management.toolbox.inventory.linked_list import LinkedList
 
 def main():
     # 创建一些 Item 实例
