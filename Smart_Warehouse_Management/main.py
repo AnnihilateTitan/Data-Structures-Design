@@ -12,8 +12,12 @@ sys.path.append(current_dir)
 
 from project_smart_warehouse_management.toolbox.inventory.item import Item, Category, Priority
 from project_smart_warehouse_management.toolbox.restock.priority_list import MinHeap
+
+# This module includes adding data to linked list and loading it into a category tree
 from project_smart_warehouse_management.toolbox.utils.loader import *
+
 from project_smart_warehouse_management.toolbox.restock.restock import predict_restock
+
 
 def predict_restock(inventorys, threshold=10):
     restock_queue = MinHeap()
@@ -23,6 +27,7 @@ def predict_restock(inventorys, threshold=10):
             restock_queue.insert(current.item)
         current = current.next
     return restock_queue
+
 
 def update_csv_file(file_path, inventory):
     with open(file_path, 'w', newline='') as csvfile:
@@ -91,6 +96,9 @@ class InventoryApp:
         tk.Button(self.root, text="Add Item", command=self.open_add_item_window).grid(row=1, column=0, sticky='ew')
         tk.Button(self.root, text="Update Quantity", command=self.open_update_quantity_window).grid(row=1, column=1, sticky='ew')
         tk.Button(self.root, text="Remove Item", command=self.open_remove_item_window).grid(row=2, column=0, sticky='ew')
+        tk.Button(self.root, text="Find by Name", command=self.open_find_by_name_window).grid(row=2, column=1, sticky='ew')
+        tk.Button(self.root, text="Find by Category", command=self.open_find_by_category_window).grid(row=3, column=0, sticky='ew')
+
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -166,8 +174,9 @@ class InventoryApp:
                         priority_level=priority
                     )
                     self.inventory.add_item(item)
-                    self.inventorys.insert(category, item)
-                    self.inventory.sort_by_id()
+                    self.inventorys.insert(category,item)
+                    self.inventory.sort_by_id() 
+                   
 
                 self.update_inventory_display()
                 update_csv_file(self.file_path, self.inventory)  # Update CSV file
@@ -220,7 +229,6 @@ class InventoryApp:
         tk.Label(window, text="Item ID:").grid(row=0, column=0)
         item_id_entry = tk.Entry(window)
         item_id_entry.grid(row=0, column=1)
-
         def item_exists(item_id):
             current = self.inventory.head
             while current:
@@ -243,7 +251,8 @@ class InventoryApp:
                     messagebox.showerror("Error", "No item found with the given ID")
                 else:
                     self.inventory.remove_item(item_id)
-                    decrement_ids_above(item_id)  # Decrement item_IDs for items with IDs above the removed item
+                    self.inventorys.remove(item_id)
+                    decrement_ids_above(item_id)
                     self.update_inventory_display()
                     update_csv_file(self.file_path, self.inventory)  # Update CSV file
                     window.destroy()
@@ -252,8 +261,103 @@ class InventoryApp:
 
         tk.Button(window, text="Remove", command=remove_item).grid(row=1, column=0, columnspan=2)
 
+    def open_find_by_name_window(self):
+        window = tk.Toplevel(self.root)
+        window.title("Find by Name")
+
+        tk.Label(window, text="Name:").grid(row=0, column=0)
+        name_entry = tk.Entry(window)
+        name_entry.grid(row=0, column=1)
+
+        def find_by_name():
+            name = name_entry.get()
+            found_items = self.inventorys.find_by_name(name)
+            if not found_items:
+                messagebox.showinfo("Result", "No items found with the given name")
+            else:
+                self.display_found_items(found_items)
+            window.destroy()
+
+        tk.Button(window, text="Find", command=find_by_name).grid(row=1, column=0, columnspan=2)
+
+    def open_find_by_category_window(self):
+        window = tk.Toplevel(self.root)
+        window.title("Find by Category")
+
+        tk.Label(window, text="Category:").grid(row=0, column=0)
+        category_var = tk.StringVar()
+        category_combobox = ttk.Combobox(window, textvariable=category_var)
+        category_combobox['values'] = [category.name for category in Category]
+        category_combobox.grid(row=0, column=1)
+
+        def find_by_category():
+            category = Category[category_var.get().upper()]
+            found_items = self.inventorys.find_by_category(category)
+            if not found_items:
+                messagebox.showinfo("Result", "No items found in the given category")
+            else:
+                self.display_found_items(found_items)
+            window.destroy()
+
+        tk.Button(window, text="Find", command=find_by_category).grid(row=1, column=0, columnspan=2)
+
+    def display_found_items(self, items):
+        window = tk.Toplevel(self.root)
+        window.title("Found Items")
+
+        found_items_display = ttk.Treeview(window, columns=("ID", "Name", "Category", "Quantity", "Priority"), show="headings")
+        found_items_display.heading("ID", text="ID", anchor=tk.W)
+        found_items_display.heading("Name", text="Name", anchor=tk.W)
+        found_items_display.heading("Category", text="Category", anchor=tk.W)
+        found_items_display.heading("Quantity", text="Quantity", anchor=tk.W)
+        found_items_display.heading("Priority", text="Priority", anchor=tk.W)
+        found_items_display.column("ID", anchor=tk.W, width=50)
+        found_items_display.column("Name", anchor=tk.W, width=200)
+        found_items_display.column("Category", anchor=tk.W, width=100)
+        found_items_display.column("Quantity", anchor=tk.W, width=100)
+        found_items_display.column("Priority", anchor=tk.W, width=100)
+        found_items_display.grid(row=0, column=0)
+
+        for item in items:
+            found_items_display.insert("", tk.END, values=(
+                item.item_ID,
+                item.name,
+                item.category.name,
+                item.quantity,
+                item.priority_level.name
+            ))
+
+
+    def show_table_message(self, title, data):
+        window = tk.Toplevel(self.root)
+        window.title(title)
+
+        if isinstance(data, list) and all(isinstance(i, tuple) for i in data):
+            tree = ttk.Treeview(window, columns=("ID", "Name", "Category", "Quantity", "Priority"), show="headings")
+            tree.heading("ID", text="ID", anchor=tk.W)
+            tree.heading("Name", text="Name", anchor=tk.W)
+            tree.heading("Category", text="Category", anchor=tk.W)
+            tree.heading("Quantity", text="Quantity", anchor=tk.W)
+            tree.heading("Priority", text="Priority", anchor=tk.W)
+            tree.column("ID", anchor=tk.W, width=50)
+            tree.column("Name", anchor=tk.W, width=200)
+            tree.column("Category", anchor=tk.W, width=100)
+            tree.column("Quantity", anchor=tk.W, width=100)
+            tree.column("Priority", anchor=tk.W, width=100)
+            tree.grid(row=0, column=0)
+
+            for row in data:
+                tree.insert("", tk.END, values=row)
+        else:
+            tk.Label(window, text=data).grid(row=0, column=0)
+
+def main():
+    root = tk.Tk()
+    InventoryApp(root)
+    root.mainloop()
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = InventoryApp(root)
-    root.mainloop()
+    main()
+
+
+
