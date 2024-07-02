@@ -129,6 +129,14 @@ Implement functions to:
 Identify low-quantity items.
 
 Insert these items into a heap based on priority.
+## 4.Implementationo fProject
+## 5.Running and Debugging of Project
+## 6.Summary
+### 6.1 Daily Work Schedule
+### 6.2 Division of Labor within the Group
+### 6.3 Tips
+### 6.4 Difficulties and Solution of Problems
+
 
 Extract items to generate a prioritized restock list.
 #### 3.2.6 Graphical Interface
