@@ -130,7 +130,12 @@ Identify low-quantity items.
 
 Insert these items into a heap based on priority.
 
-## 4.Implementationo fProject
+#### 3.2.6 Graphical Interface
+
+Develop an interface for categorized inventory visualization and priority heap management:
+
+Enable operations like adding and removing items.
+## 4.Implementation of Project
 ## 5.Running and Debugging of Project
 ## 6.Summary
 ### 6.1 Daily Work Schedule
