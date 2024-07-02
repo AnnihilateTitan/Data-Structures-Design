@@ -328,29 +328,6 @@ class InventoryApp:
             ))
 
 
-    def show_table_message(self, title, data):
-        window = tk.Toplevel(self.root)
-        window.title(title)
-
-        if isinstance(data, list) and all(isinstance(i, tuple) for i in data):
-            tree = ttk.Treeview(window, columns=("ID", "Name", "Category", "Quantity", "Priority"), show="headings")
-            tree.heading("ID", text="ID", anchor=tk.W)
-            tree.heading("Name", text="Name", anchor=tk.W)
-            tree.heading("Category", text="Category", anchor=tk.W)
-            tree.heading("Quantity", text="Quantity", anchor=tk.W)
-            tree.heading("Priority", text="Priority", anchor=tk.W)
-            tree.column("ID", anchor=tk.W, width=50)
-            tree.column("Name", anchor=tk.W, width=200)
-            tree.column("Category", anchor=tk.W, width=100)
-            tree.column("Quantity", anchor=tk.W, width=100)
-            tree.column("Priority", anchor=tk.W, width=100)
-            tree.grid(row=0, column=0)
-
-            for row in data:
-                tree.insert("", tk.END, values=row)
-        else:
-            tk.Label(window, text=data).grid(row=0, column=0)
-
 def main():
     root = tk.Tk()
     InventoryApp(root)
