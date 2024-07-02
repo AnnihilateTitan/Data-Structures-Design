@@ -26,7 +26,24 @@ class LinkedList:
         new_node = Node(item)   # Create a new node with the given item
         new_node.next = self.head   # Set the new node's next to current head
         self.head = new_node    # Update the head to the new node
+    
+    def find_by_id(self, item_id):
+        return self._find_by_id(self.root, item_id)
 
+    # Recursive helper function to find an item by item ID in the category tree.
+    def _find_by_id(self, node, item_id):  
+        if node is None:
+            return None
+        current = node.items.head
+        while current:
+            if current.item.item_ID == item_id:
+                return current.item
+            current = current.next
+        left_result = self._find_by_id(node.left, item_id)
+        if left_result:
+            return left_result
+        return self._find_by_id(node.right, item_id)
+    
     # Method to remove an item from the linked list by item_ID
     def remove_item(self, item_ID):
         current = self.head

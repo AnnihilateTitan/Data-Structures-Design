@@ -12,7 +12,7 @@ sys.path.append(current_dir)
 
 from project_smart_warehouse_management.toolbox.inventory.item import Item, Category, Priority
 from project_smart_warehouse_management.toolbox.restock.priority_list import MinHeap
-from project_smart_warehouse_management.toolbox.utils.loader import load_dataset
+from project_smart_warehouse_management.toolbox.utils.loader import *
 from project_smart_warehouse_management.toolbox.restock.restock import predict_restock
 
 def predict_restock(inventorys, threshold=10):
@@ -47,6 +47,7 @@ class InventoryApp:
 
         # Load dataset
         self.file_path = os.path.join(os.path.dirname(__file__), 'files', 'smart_warehouse_dataset.csv')
+        self.inventorys = load_datasets(self.file_path)
         self.inventory = load_dataset(self.file_path)
         self.restock_queue = predict_restock(self.inventory)
 
@@ -54,6 +55,7 @@ class InventoryApp:
         self.create_widgets()
         
     def load_data(self):
+        self.inventorys = load_datasets(self.file_path)
         self.inventory = load_dataset(self.file_path)
         self.restock_queue = predict_restock(self.inventory)
         
@@ -88,6 +90,7 @@ class InventoryApp:
         # Various function buttons
         tk.Button(self.root, text="Add Item", command=self.open_add_item_window).grid(row=1, column=0, sticky='ew')
         tk.Button(self.root, text="Update Quantity", command=self.open_update_quantity_window).grid(row=1, column=1, sticky='ew')
+        tk.Button(self.root, text="Remove Item", command=self.open_remove_item_window).grid(row=2, column=0, sticky='ew')
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -163,7 +166,8 @@ class InventoryApp:
                         priority_level=priority
                     )
                     self.inventory.add_item(item)
-                    self.inventory.sort_by_id() 
+                    self.inventorys.insert(category, item)
+                    self.inventory.sort_by_id()
 
                 self.update_inventory_display()
                 update_csv_file(self.file_path, self.inventory)  # Update CSV file
@@ -209,10 +213,47 @@ class InventoryApp:
 
         tk.Button(window, text="Update", command=update_quantity).grid(row=2, column=0, columnspan=2)
 
-def main():
-    root = tk.Tk()
-    InventoryApp(root)
-    root.mainloop()
+    def open_remove_item_window(self):
+        window = tk.Toplevel(self.root)
+        window.title("Remove Item")
+
+        tk.Label(window, text="Item ID:").grid(row=0, column=0)
+        item_id_entry = tk.Entry(window)
+        item_id_entry.grid(row=0, column=1)
+
+        def item_exists(item_id):
+            current = self.inventory.head
+            while current:
+                if current.item.item_ID == item_id:
+                    return True
+                current = current.next
+            return False
+
+        def decrement_ids_above(item_id):
+            current = self.inventory.head
+            while current:
+                if current.item.item_ID > item_id:
+                    current.item.item_ID -= 1
+                current = current.next
+
+        def remove_item():
+            try:
+                item_id = int(item_id_entry.get())
+                if not item_exists(item_id):
+                    messagebox.showerror("Error", "No item found with the given ID")
+                else:
+                    self.inventory.remove_item(item_id)
+                    decrement_ids_above(item_id)  # Decrement item_IDs for items with IDs above the removed item
+                    self.update_inventory_display()
+                    update_csv_file(self.file_path, self.inventory)  # Update CSV file
+                    window.destroy()
+            except ValueError:
+                messagebox.showerror("Error", "Invalid input")
+
+        tk.Button(window, text="Remove", command=remove_item).grid(row=1, column=0, columnspan=2)
+
 
 if __name__ == "__main__":
-    main()
+    root = tk.Tk()
+    app = InventoryApp(root)
+    root.mainloop()
