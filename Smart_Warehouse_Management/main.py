@@ -98,7 +98,7 @@ class InventoryApp:
         tk.Button(self.root, text="Remove Item", command=self.open_remove_item_window).grid(row=2, column=0, sticky='ew')
         tk.Button(self.root, text="Find by Name", command=self.open_find_by_name_window).grid(row=2, column=1, sticky='ew')
         tk.Button(self.root, text="Find by Category", command=self.open_find_by_category_window).grid(row=3, column=0, sticky='ew')
-
+        tk.Button(self.root, text="Find by ID", command=self.open_find_by_id_window).grid(row=3, column=1, sticky='ew')
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -327,6 +327,29 @@ class InventoryApp:
                 item.priority_level.name
             ))
 
+    def open_find_by_id_window(self):
+        window = tk.Toplevel(self.root)
+        window.title("Find by ID")
+
+        tk.Label(window, text="Item ID:").grid(row=0, column=0)
+        item_id_entry = tk.Entry(window)
+        item_id_entry.grid(row=0, column=1)
+
+        def find_item_by_id():
+            try:
+                item_id = int(item_id_entry.get())
+                item_found = self.inventorys.find_by_id(item_id)
+
+                if item_found:
+                    self.display_found_items([item_found])
+                else:
+                    messagebox.showerror("Error", f"Item with ID '{item_id}' not found")
+
+            except ValueError:
+                messagebox.showerror("Error", "Invalid input")
+
+        tk.Button(window, text="Find", command=find_item_by_id).grid(row=1, column=0, columnspan=2)
+
 
 def main():
     root = tk.Tk()
@@ -335,6 +358,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
