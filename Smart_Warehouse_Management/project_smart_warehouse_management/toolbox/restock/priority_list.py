@@ -37,5 +37,8 @@ class MinHeap:
             self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
             self._heapify_down(smallest)
 
+    def is_empty(self):
+        return len(self.heap) == 0
+
     def __repr__(self):
         return repr(self.heap)

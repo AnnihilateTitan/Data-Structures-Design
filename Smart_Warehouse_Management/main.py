@@ -99,6 +99,7 @@ class InventoryApp:
         tk.Button(self.root, text="Find by Name", command=self.open_find_by_name_window).grid(row=2, column=1, sticky='ew')
         tk.Button(self.root, text="Find by Category", command=self.open_find_by_category_window).grid(row=3, column=0, sticky='ew')
         tk.Button(self.root, text="Find by ID", command=self.open_find_by_id_window).grid(row=3, column=1, sticky='ew')
+        tk.Button(self.root, text="Generate Restock Queue", command=self.open_restock_threshold_window).grid(row=4, column=0, sticky='ew')
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -350,6 +351,51 @@ class InventoryApp:
 
         tk.Button(window, text="Find", command=find_item_by_id).grid(row=1, column=0, columnspan=2)
 
+    def open_restock_threshold_window(self):
+        window = tk.Toplevel(self.root)
+        window.title("Restock Threshold")
+
+        tk.Label(window, text="Restock Threshold:").grid(row=0, column=0)
+        threshold_entry = tk.Entry(window)
+        threshold_entry.grid(row=0, column=1)
+        
+        def generate_restock_queue():
+            try:
+                threshold = int(threshold_entry.get())
+                self.restock_queue = predict_restock(self.inventory, threshold)
+                self.show_restock_queue()
+            except ValueError:
+                messagebox.showerror("Error", "Invalid input")
+        
+        tk.Button(window, text="Generate", command=generate_restock_queue).grid(row=1, column=0, columnspan=2)
+
+    def show_restock_queue(self):
+        window = tk.Toplevel(self.root)
+        window.title("Restock Queue")
+
+        restock_queue_display = ttk.Treeview(window, columns=("ID", "Name", "Category", "Quantity", "Priority"), show="headings")
+        restock_queue_display.heading("ID", text="ID", anchor=tk.W)
+        restock_queue_display.heading("Name", text="Name", anchor=tk.W)
+        restock_queue_display.heading("Category", text="Category", anchor=tk.W)
+        restock_queue_display.heading("Quantity", text="Quantity", anchor=tk.W)
+        restock_queue_display.heading("Priority", text="Priority", anchor=tk.W)
+        restock_queue_display.column("ID", anchor=tk.W, width=50)
+        restock_queue_display.column("Name", anchor=tk.W, width=200)
+        restock_queue_display.column("Category", anchor=tk.W, width=100)
+        restock_queue_display.column("Quantity", anchor=tk.W, width=100)
+        restock_queue_display.column("Priority", anchor=tk.W, width=100)
+        restock_queue_display.grid(row=0, column=0)
+
+        while not self.restock_queue.is_empty():
+            item = self.restock_queue.extract()
+            restock_queue_display.insert("", tk.END, values=(
+                item.item_ID,
+                item.name,
+                item.category.name,
+                item.quantity,
+                item.priority_level.name
+            ))
+
 
 def main():
     root = tk.Tk()
@@ -358,3 +404,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
