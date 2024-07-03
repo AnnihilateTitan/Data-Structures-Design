@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, Menu
 import os
 import sys
 import csv
@@ -59,6 +59,9 @@ class InventoryApp:
         # Create interface components
         self.create_widgets()
         
+        # 创建右键菜单
+        self.create_right_click_menu()
+
     def load_data(self):
         self.inventorys = load_datasets(self.file_path)
         self.inventory = load_dataset(self.file_path)
@@ -90,6 +93,9 @@ class InventoryApp:
         self.inventory_display.column("Priority", anchor=tk.W, width=100)
         self.inventory_display.grid(row=0, column=0)
 
+        # 绑定右键菜单事件
+        self.inventory_display.bind("<Button-3>", self.display_right_click_menu)
+
         self.update_inventory_display()
 
         # Various function buttons
@@ -102,6 +108,20 @@ class InventoryApp:
         tk.Button(self.root, text="Show by Category", command=self.generate_report).grid(row=4, column=1, sticky='ew')
         tk.Button(self.root, text="Generate Restock Queue", command=self.open_restock_threshold_window).grid(row=4, column=0, sticky='ew')
         tk.Button(self.root, text="Log", command=self.show_log).grid(row=5, column=0, columnspan=2, sticky='ew')
+
+    def display_right_click_menu(self, event):
+        # 获取右键点击的项目ID
+        selected_item = self.inventory_display.selection()
+        if selected_item:
+            self.selected_item_id = self.inventory_display.item(selected_item)["values"][0]
+            self.right_click_menu.post(event.x_root, event.y_root)
+
+    def create_right_click_menu(self):
+        # 创建右键菜单
+        self.right_click_menu = Menu(self.root, tearoff=False)
+        self.right_click_menu.add_command(label="Update Quantity", command=self.open_update_quantity_window_by_right_click)
+        self.right_click_menu.add_command(label="Remove Item", command=self.open_remove_item_window_by_right_click)
+
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -120,7 +140,7 @@ class InventoryApp:
     def log_action(self, action_type, item):
         log_file_path = os.path.join(os.path.dirname(__file__), 'files', 'log.txt')
         with open(log_file_path, 'a') as log_file:
-            log_file.write(f"{datetime.datetime.now()}: {action_type} - {item}\n")
+            log_file.write(f"{datetime.datetime.now()}: {action_type} - {item}\n\n")
             
     def open_add_item_window(self):
         window = tk.Toplevel(self.root)
@@ -234,6 +254,40 @@ class InventoryApp:
 
         tk.Button(window, text="Update", command=update_quantity).grid(row=2, column=0, columnspan=2)
 
+    def open_update_quantity_window_by_right_click(self):
+            window = tk.Toplevel(self.root)
+            window.title("Update Quantity")
+
+            tk.Label(window, text="New Quantity:").grid(row=1, column=0)
+            new_quantity_entry = tk.Entry(window)
+            new_quantity_entry.grid(row=1, column=1)
+
+            def item_exists(item_id):
+                current = self.inventory.head
+                while current:
+                    if current.item.item_ID == item_id:
+                        return True, current.item.quantity
+                    current = current.next
+                return False, None
+
+            def update_quantity():
+                try:
+                    item_id = self.selected_item_id
+                    new_quantity = int(new_quantity_entry.get())
+                    exists, original_quantity = item_exists(item_id)
+                    if not exists:
+                        messagebox.showerror("Error", "No item found with the given ID")
+                    else:
+                        self.inventory.update_quantity(item_id, new_quantity)
+                        self.inventorys.update_quantity(item_id, new_quantity)
+                        self.log_action("Updated", f"Item ID {item_id} from {original_quantity} quantity to {new_quantity}")  # Log the action
+                        self.update_inventory_display()
+                        update_csv_file(self.file_path, self.inventory)  # Update CSV file
+                        window.destroy()
+                except ValueError:
+                    messagebox.showerror("Error", "Invalid input")
+
+            tk.Button(window, text="Update", command=update_quantity).grid(row=2, column=0, columnspan=2)
 
     def open_remove_item_window(self):
         window = tk.Toplevel(self.root)
@@ -284,6 +338,48 @@ class InventoryApp:
 
         tk.Button(window, text="Remove", command=remove_item).grid(row=1, column=0, columnspan=2)
 
+    def open_remove_item_window_by_right_click(self):
+        def item_exists(item_id):
+            current = self.inventory.head
+            while current:
+                if current.item.item_ID == item_id:
+                    return current.item
+                current = current.next
+            return None
+
+        def decrement_ids_above(item_id):
+            current = self.inventory.head
+            while current:
+                if current.item.item_ID > item_id:
+                    current.item.item_ID -= 1
+                current = current.next
+
+        def remove_item():
+            try:
+                item_id = self.selected_item_id
+                item = item_exists(item_id)
+                if not item:
+                    messagebox.showerror("Error", "No item found with the given ID")
+                else:
+                    item_to_log = Item(
+                        item_ID=item.item_ID,
+                        name=item.name,
+                        category=item.category,
+                        quantity=item.quantity,
+                        priority_level=item.priority_level
+                    )
+
+                    if messagebox.askyesno("Confirm Remove", f"Are you sure you want to remove item ID {item_id}?"):
+                        self.inventory.remove_item(item_id)
+                        self.inventorys.remove(item_id)
+                        decrement_ids_above(item_id)
+                        self.log_action("Removed", item_to_log)
+                        self.update_inventory_display()
+                        update_csv_file(self.file_path, self.inventory)  # Update CSV file
+            except ValueError:
+                messagebox.showerror("Error", "Invalid input")
+
+        remove_item()
 
 
     def open_find_by_name_window(self):
@@ -367,6 +463,7 @@ class InventoryApp:
 
                 if item_found:
                     self.display_found_items([item_found])
+                    self.update_inventory_display()
                 else:
                     messagebox.showerror("Error", f"Item with ID '{item_id}' not found")
 
@@ -487,7 +584,7 @@ class InventoryApp:
             text_area.insert(tk.END, log_content)
 
         tk.Button(window, text="Close", command=window.destroy).pack()
-
+    
 def main():
     root = tk.Tk()
     InventoryApp(root)

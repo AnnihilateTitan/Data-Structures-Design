@@ -99,6 +99,14 @@ class CategoryTree:
             return left_result
         return self._find_by_id(node.right, item_id)
 
+    # Update the quantity of an item in the category tree by item ID.
+    def update_quantity(self, item_id, new_quantity):
+        item = self.find_by_id(item_id)
+        if item is not None:
+            item.quantity = new_quantity
+            return True
+        return False
+
     # Remove an item from the category tree by item ID.
     def remove(self, item_id):
         self.root = self._remove(self.root, item_id)

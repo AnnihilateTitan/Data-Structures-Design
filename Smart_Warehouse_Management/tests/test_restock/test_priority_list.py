@@ -9,9 +9,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(project_root)
 
-# Import classes to be tested
-from project_smart_warehouse_management.toolbox.utils.loader import load_dataset
+
 from project_smart_warehouse_management.toolbox.restock.priority_list import MinHeap
+
+
 
 class TestMinHeap(unittest.TestCase):
 
@@ -36,7 +37,7 @@ class TestMinHeap(unittest.TestCase):
             heap.insert(item)
         
         self.assertEqual(heap.heap[0], 1)
-    
+
     def test_heapify_down(self):
         heap = MinHeap()
         items = [5, 3, 8, 1, 2]
@@ -49,6 +50,37 @@ class TestMinHeap(unittest.TestCase):
         self.assertEqual(heap.extract(), 3)
         self.assertEqual(heap.extract(), 5)
         self.assertEqual(heap.extract(), 8)
+
+    def test_empty_extract(self):
+        heap = MinHeap()
+        self.assertIsNone(heap.extract())
+    
+    def test_large_random_insert_and_extract(self):
+        import random
+        heap = MinHeap()
+        items = random.sample(range(1, 1000), 100)
+        
+        for item in items:
+            heap.insert(item)
+        
+        sorted_items = []
+        while len(heap.heap) > 0:
+            sorted_items.append(heap.extract())
+        
+        self.assertEqual(sorted_items, sorted(items))
+
+    def test_initial_empty_heap(self):
+        heap = MinHeap()
+        self.assertTrue(heap.is_empty())
+
+    def test_repr(self):
+        heap = MinHeap()
+        heap.insert(5)
+        heap.insert(3)
+        heap.insert(8)
+        self.assertEqual(repr(heap), '[3, 5, 8]')
+
+    
 
 if __name__ == '__main__':
     unittest.main()

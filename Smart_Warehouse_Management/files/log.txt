@@ -1,12 +1,4 @@
-2024-07-03 15:59:33.495047: Added - Item(item_ID=11, name='2143', category=FURNITURE, quantity=231, priority_level=HIGH)
-2024-07-03 15:59:40.827250: Removed - Item(item_ID=11, name='2143', category=FURNITURE, quantity=231, priority_level=HIGH)
-2024-07-03 16:02:19.882856: Added - Item(item_ID=11, name='113', category=FURNITURE, quantity=12, priority_level=HIGH)
-2024-07-03 16:02:25.788018: Removed - Item(item_ID=11, name='113', category=FURNITURE, quantity=12, priority_level=HIGH)
-2024-07-03 16:08:05.368889: Updated - Item ID 10 from 35 quantity to 100
-2024-07-03 16:10:57.924495: Added - Item(item_ID=11, name='123', category=FURNITURE, quantity=31, priority_level=HIGH)
-2024-07-03 16:11:02.225422: Removed - Item(item_ID=11, name='123', category=FURNITURE, quantity=31, priority_level=HIGH)
-2024-07-03 16:11:23.792975: Added - Item(item_ID=11, name='tgit', category=FURNITURE, quantity=31, priority_level=HIGH)
-2024-07-03 16:11:26.714898: Removed - Item(item_ID=11, name='tgit', category=FURNITURE, quantity=31, priority_level=HIGH)
-2024-07-03 20:30:03.427921: Added - Item(item_ID=11, name='121', category=ELECTRONICS, quantity=21, priority_level=HIGH)
-2024-07-03 20:30:07.735015: Removed - Item(item_ID=11, name='121', category=ELECTRONICS, quantity=21, priority_level=HIGH)
-2024-07-03 20:30:30.871600: Updated - Item ID 6 from 7 quantity to 1
+2024-07-03 20:58:45.200255: Updated - Item ID 10 from 123 quantity to 213
+
+2024-07-03 20:58:52.224995: Updated - Item ID 10 from 213 quantity to 13
+
