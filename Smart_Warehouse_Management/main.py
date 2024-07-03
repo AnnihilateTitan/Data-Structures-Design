@@ -100,6 +100,7 @@ class InventoryApp:
         tk.Button(self.root, text="Find by Category", command=self.open_find_by_category_window).grid(row=3, column=0, sticky='ew')
         tk.Button(self.root, text="Find by ID", command=self.open_find_by_id_window).grid(row=3, column=1, sticky='ew')
         tk.Button(self.root, text="Generate Restock Queue", command=self.open_restock_threshold_window).grid(row=4, column=0, sticky='ew')
+        tk.Button(self.root, text="Show by Category", command=self.generate_report).grid(row=4, column=1, sticky='ew')
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -396,6 +397,55 @@ class InventoryApp:
                 item.priority_level.name
             ))
 
+    def generate_report(self):
+            # Create a dictionary to store items categorized by Category
+            categorized_items = {}
+            current = self.inventory.head
+            while current:
+                category_name = current.item.category.name
+                if category_name not in categorized_items:
+                    categorized_items[category_name] = []
+                categorized_items[category_name].append((
+                    current.item.item_ID,
+                    current.item.name,
+                    current.item.category.name,
+                    current.item.quantity,
+                    current.item.priority_level.name
+                ))
+                current = current.next
+            
+            # Sort categories alphabetically
+            sorted_categories = sorted(categorized_items.keys())
+
+            # Display report sorted by category
+            report_data = []
+            for category in sorted_categories:
+                report_data.extend(categorized_items[category])
+
+            self.show_table_message("Inventory Report", report_data)
+
+    def show_table_message(self, title, data):
+        window = tk.Toplevel(self.root)
+        window.title(title)
+
+        if isinstance(data, list) and all(isinstance(i, tuple) for i in data):
+            tree = ttk.Treeview(window, columns=("ID", "Name", "Category", "Quantity", "Priority"), show="headings")
+            tree.heading("ID", text="ID", anchor=tk.W)
+            tree.heading("Name", text="Name", anchor=tk.W)
+            tree.heading("Category", text="Category", anchor=tk.W)
+            tree.heading("Quantity", text="Quantity", anchor=tk.W)
+            tree.heading("Priority", text="Priority", anchor=tk.W)
+            tree.column("ID", anchor=tk.W, width=50)
+            tree.column("Name", anchor=tk.W, width=200)
+            tree.column("Category", anchor=tk.W, width=100)
+            tree.column("Quantity", anchor=tk.W, width=100)
+            tree.column("Priority", anchor=tk.W, width=100)
+            tree.grid(row=0, column=0)
+
+            for row in data:
+                tree.insert("", tk.END, values=row)
+        else:
+            tk.Label(window, text=data).grid(row=0, column=0)
 
 def main():
     root = tk.Tk()
@@ -404,3 +454,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
