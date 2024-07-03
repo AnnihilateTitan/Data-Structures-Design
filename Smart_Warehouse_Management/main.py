@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 import os
 import sys
 import csv
-
+import datetime
 # Get the current script file directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -99,8 +99,9 @@ class InventoryApp:
         tk.Button(self.root, text="Find by Name", command=self.open_find_by_name_window).grid(row=2, column=1, sticky='ew')
         tk.Button(self.root, text="Find by Category", command=self.open_find_by_category_window).grid(row=3, column=0, sticky='ew')
         tk.Button(self.root, text="Find by ID", command=self.open_find_by_id_window).grid(row=3, column=1, sticky='ew')
-        tk.Button(self.root, text="Generate Restock Queue", command=self.open_restock_threshold_window).grid(row=4, column=0, sticky='ew')
         tk.Button(self.root, text="Show by Category", command=self.generate_report).grid(row=4, column=1, sticky='ew')
+        tk.Button(self.root, text="Generate Restock Queue", command=self.open_restock_threshold_window).grid(row=4, column=0, sticky='ew')
+        tk.Button(self.root, text="Log", command=self.show_log).grid(row=5, column=0, columnspan=2, sticky='ew')
 
     def update_inventory_display(self):
         for item in self.inventory_display.get_children():
@@ -115,7 +116,12 @@ class InventoryApp:
                 current.item.priority_level.name
             ))
             current = current.next
-
+            
+    def log_action(self, action_type, item):
+        log_file_path = os.path.join(os.path.dirname(__file__), 'files', 'log.txt')
+        with open(log_file_path, 'a') as log_file:
+            log_file.write(f"{datetime.datetime.now()}: {action_type} - {item}\n")
+            
     def open_add_item_window(self):
         window = tk.Toplevel(self.root)
         window.title("Add Item")
@@ -178,6 +184,7 @@ class InventoryApp:
                     self.inventory.add_item(item)
                     self.inventorys.insert(category,item)
                     self.inventory.sort_by_id() 
+                    self.log_action("Added", item) 
                    
 
                 self.update_inventory_display()
@@ -204,18 +211,21 @@ class InventoryApp:
             current = self.inventory.head
             while current:
                 if current.item.item_ID == item_id:
-                    return True
+                    return True, current.item.quantity
                 current = current.next
-            return False
+            return False, None
 
         def update_quantity():
             try:
                 item_id = int(item_id_entry.get())
                 new_quantity = int(new_quantity_entry.get())
-                if not item_exists(item_id):
+                exists, original_quantity = item_exists(item_id)
+                if not exists:
                     messagebox.showerror("Error", "No item found with the given ID")
                 else:
                     self.inventory.update_quantity(item_id, new_quantity)
+                    self.inventorys.update_quantity(item_id, new_quantity)
+                    self.log_action("Updated", f"Item ID {item_id} from {original_quantity} quantity to {new_quantity}")  # Log the action
                     self.update_inventory_display()
                     update_csv_file(self.file_path, self.inventory)  # Update CSV file
                     window.destroy()
@@ -224,6 +234,7 @@ class InventoryApp:
 
         tk.Button(window, text="Update", command=update_quantity).grid(row=2, column=0, columnspan=2)
 
+
     def open_remove_item_window(self):
         window = tk.Toplevel(self.root)
         window.title("Remove Item")
@@ -231,13 +242,14 @@ class InventoryApp:
         tk.Label(window, text="Item ID:").grid(row=0, column=0)
         item_id_entry = tk.Entry(window)
         item_id_entry.grid(row=0, column=1)
+
         def item_exists(item_id):
             current = self.inventory.head
             while current:
                 if current.item.item_ID == item_id:
-                    return True
+                    return current.item
                 current = current.next
-            return False
+            return None
 
         def decrement_ids_above(item_id):
             current = self.inventory.head
@@ -249,12 +261,21 @@ class InventoryApp:
         def remove_item():
             try:
                 item_id = int(item_id_entry.get())
-                if not item_exists(item_id):
+                item = item_exists(item_id)
+                if not item:
                     messagebox.showerror("Error", "No item found with the given ID")
                 else:
+                    item_to_log = Item(
+                        item_ID=item.item_ID,
+                        name=item.name,
+                        category=item.category,
+                        quantity=item.quantity,
+                        priority_level=item.priority_level
+                    )
                     self.inventory.remove_item(item_id)
                     self.inventorys.remove(item_id)
                     decrement_ids_above(item_id)
+                    self.log_action("Removed", item_to_log)
                     self.update_inventory_display()
                     update_csv_file(self.file_path, self.inventory)  # Update CSV file
                     window.destroy()
@@ -262,6 +283,8 @@ class InventoryApp:
                 messagebox.showerror("Error", "Invalid input")
 
         tk.Button(window, text="Remove", command=remove_item).grid(row=1, column=0, columnspan=2)
+
+
 
     def open_find_by_name_window(self):
         window = tk.Toplevel(self.root)
@@ -446,6 +469,24 @@ class InventoryApp:
                 tree.insert("", tk.END, values=row)
         else:
             tk.Label(window, text=data).grid(row=0, column=0)
+            
+    def show_log(self):
+        log_file_path = os.path.join(os.path.dirname(__file__), 'files', 'log.txt')
+        if not os.path.exists(log_file_path):
+            messagebox.showinfo("Log", "No log file found.")
+            return
+
+        window = tk.Toplevel(self.root)
+        window.title("Log")
+
+        text_area = tk.Text(window)
+        text_area.pack(expand=True, fill=tk.BOTH)
+
+        with open(log_file_path, 'r') as log_file:
+            log_content = log_file.read()
+            text_area.insert(tk.END, log_content)
+
+        tk.Button(window, text="Close", command=window.destroy).pack()
 
 def main():
     root = tk.Tk()
