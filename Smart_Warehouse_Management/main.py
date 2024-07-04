@@ -139,8 +139,9 @@ class InventoryApp:
             
     def log_action(self, action_type, item):
         log_file_path = os.path.join(os.path.dirname(__file__), 'files', 'log.txt')
+        username = os.getlogin()  # 获取当前登录的用户名
         with open(log_file_path, 'a') as log_file:
-            log_file.write(f"{datetime.datetime.now()}: {action_type} - {item}\n\n")
+            log_file.write(f"{datetime.datetime.now()}: {action_type} - {item} by {username}\n\n")
             
     def open_add_item_window(self):
         window = tk.Toplevel(self.root)
@@ -231,7 +232,7 @@ class InventoryApp:
             current = self.inventory.head
             while current:
                 if current.item.item_ID == item_id:
-                    return True, current.item.quantity
+                    return True, current.item.quantity, current.item.name
                 current = current.next
             return False, None
 
@@ -239,13 +240,13 @@ class InventoryApp:
             try:
                 item_id = int(item_id_entry.get())
                 new_quantity = int(new_quantity_entry.get())
-                exists, original_quantity = item_exists(item_id)
+                exists, original_quantity, item_name= item_exists(item_id)
                 if not exists:
                     messagebox.showerror("Error", "No item found with the given ID")
                 else:
                     self.inventory.update_quantity(item_id, new_quantity)
                     self.inventorys.update_quantity(item_id, new_quantity)
-                    self.log_action("Updated", f"Item ID {item_id} from {original_quantity} quantity to {new_quantity}")  # Log the action
+                    self.log_action("Updated", f"Item {item_name} from {original_quantity} quantity to {new_quantity}")  # Log the action
                     self.update_inventory_display()
                     update_csv_file(self.file_path, self.inventory)  # Update CSV file
                     window.destroy()
@@ -266,7 +267,7 @@ class InventoryApp:
                 current = self.inventory.head
                 while current:
                     if current.item.item_ID == item_id:
-                        return True, current.item.quantity
+                        return True, current.item.quantity, current.item.name
                     current = current.next
                 return False, None
 
@@ -274,13 +275,13 @@ class InventoryApp:
                 try:
                     item_id = self.selected_item_id
                     new_quantity = int(new_quantity_entry.get())
-                    exists, original_quantity = item_exists(item_id)
+                    exists, original_quantity, item_name= item_exists(item_id)
                     if not exists:
                         messagebox.showerror("Error", "No item found with the given ID")
                     else:
                         self.inventory.update_quantity(item_id, new_quantity)
                         self.inventorys.update_quantity(item_id, new_quantity)
-                        self.log_action("Updated", f"Item ID {item_id} from {original_quantity} quantity to {new_quantity}")  # Log the action
+                        self.log_action("Updated", f"Item {item_name} from {original_quantity} quantity to {new_quantity}")  # Log the action
                         self.update_inventory_display()
                         update_csv_file(self.file_path, self.inventory)  # Update CSV file
                         window.destroy()
@@ -326,13 +327,15 @@ class InventoryApp:
                         quantity=item.quantity,
                         priority_level=item.priority_level
                     )
-                    self.inventory.remove_item(item_id)
-                    self.inventorys.remove(item_id)
-                    decrement_ids_above(item_id)
-                    self.log_action("Removed", item_to_log)
-                    self.update_inventory_display()
-                    update_csv_file(self.file_path, self.inventory)  # Update CSV file
-                    window.destroy()
+
+                    if messagebox.askyesno("Confirm Remove", f"Are you sure you want to remove item ID {item_id}?"):
+                        self.inventory.remove_item(item_id)
+                        self.inventorys.remove(item_id)
+                        decrement_ids_above(item_id)
+                        self.log_action("Removed", item_to_log)
+                        self.update_inventory_display()
+                        update_csv_file(self.file_path, self.inventory)  # Update CSV file
+                        window.destroy()
             except ValueError:
                 messagebox.showerror("Error", "Invalid input")
 

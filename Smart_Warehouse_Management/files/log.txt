@@ -2,3 +2,35 @@
 
 2024-07-03 20:58:52.224995: Updated - Item ID 10 from 213 quantity to 13
 
+2024-07-03 21:52:49.649051: Updated - Item ID 6 from 7 quantity to 44
+
+2024-07-03 21:58:58.926962: Updated - Item ID 6 from 44 quantity to 312
+
+2024-07-03 21:59:12.290804: Updated - Item ID 6 from 312 quantity to 31
+
+2024-07-03 21:59:52.940496: Updated - Item Dress from 40 quantity to 222
+
+2024-07-03 22:00:05.579234: Updated - Item Dress from 222 quantity to 321
+
+2024-07-03 22:02:53.217909: Added - Item(item_ID=11, name='421', category=ELECTRONICS, quantity=42, priority_level=HIGH)
+
+2024-07-03 22:02:57.081613: Removed - Item(item_ID=11, name='421', category=ELECTRONICS, quantity=42, priority_level=HIGH)
+
+2024-07-03 22:04:42.439202: Added - Item(item_ID=11, name='xiehan', category=CLOTHING, quantity=12, priority_level=MEDIUM)
+
+2024-07-03 22:04:47.398147: Removed - Item(item_ID=11, name='xiehan', category=CLOTHING, quantity=12, priority_level=MEDIUM)
+
+2024-07-03 22:08:18.970295: Updated - Item Dress from 321 quantity to 15 by Qr.kutyo
+
+2024-07-03 22:11:33.538806: Updated - Item Mobile Phone from 25 quantity to 7 by Qr.kutyo
+
+2024-07-03 22:11:45.015714: Updated - Item Mobile Phone from 7 quantity to 45 by Qr.kutyo
+
+2024-07-04 18:12:14.655648: Updated - Item Mobile Phone from 45 quantity to 321 by Qr.kutyo
+
+2024-07-04 18:12:28.340534: Updated - Item Mobile Phone from 321 quantity to 45 by Qr.kutyo
+
+2024-07-04 18:13:43.102808: Updated - Item Jacket from 13 quantity to 15 by Qr.kutyo
+
+2024-07-04 18:21:59.092210: Updated - Item Desk from 31 quantity to 36 by Qr.kutyo
+

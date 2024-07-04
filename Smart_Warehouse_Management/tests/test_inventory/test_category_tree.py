@@ -76,7 +76,12 @@ class TestCategoryTree(unittest.TestCase):
         self.assertEqual(levels[0][0].category, Category.ELECTRONICS)
         self.assertEqual(len(levels[1]), 1)  # Nodes at level 1
         self.assertEqual(levels[1][0].category, Category.FURNITURE)
-
+    
+    def test_update_quantity_success(self):
+        # Test updating quantity of an existing item (success case)
+        result = self.tree.update_quantity(1, 20)
+        self.assertTrue(result)
+        self.assertEqual(self.tree.find_by_id(1).quantity, 20)
 
 
 if __name__ == '__main__':
