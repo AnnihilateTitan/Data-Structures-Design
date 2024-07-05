@@ -636,8 +636,6 @@ Open the generated HTML report in the browser to view detailed coverage informat
 
 - Open index.xml in the browser.
 
-## Image Example
-
 This is a screenshot of test coverage:
 
 ![test_coverage](screenshot/image.png "Test_Coverage")
