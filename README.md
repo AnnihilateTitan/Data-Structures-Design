@@ -649,3 +649,43 @@ Open the generated HTML report in the browser to view detailed coverage informat
 This is a screenshot of test coverage:
 
 ![test_coverage](screenshot/image.png "Test_Coverage")
+
+## 6.Summary
+
+### 6.1 Daily Work Schedule
+
+| Date       | version             | Task Completed          |
+| ---------- | ---------------- | ----------------------- |
+| 2024-06-25 |  v1.0   | Wrote item.py and linked_list.py and the code for their tests |
+| 2024-06-26 |  v1.1  | Wrote loader.py and the code for it tests |
+| 2024-06-27 |  v1.2   | Wrote category_tree.py and the code for it tests |
+| 2024-06-28 |  v1.3   | Wrote priority_list.py and restock.py and the code for their tests. And integrated all implemented functionalities in main.py |
+| 2024-07-1 |  v1.4   | The heap structure was rewritten and the heapq library was no longer used. Modify the output format of main.py |
+| 2024-07-1 |  v2.0   | Write UI, you can in the UI interface, display inventory, add item, and modify item inventory. added sort_by_id method In linked_list.py. In loader.py added load data from a CSV file into the linked list, then insert the data into the CategoryTree, and sort the linked list. |
+| 2024-07-2 |  v2.1  | Added the ability to remove items in the UI |
+| 2024-07-2 |  v2.2   | Add search by name, search by category functionality in the UI |
+| 2024-07-2 |  v2.3   | Add search by id in the UI |
+| 2024-07-3 |  v2.4   | Added replenishment prediction queue function in the UI |
+| 2024-07-3 |  v2.5  | Added the ability to show by category in the UI |
+| 2024-07-3 |  v2.6   | Added the log function in the UI |
+| 2024-07-3 |  v2.7   | Modified test to improve coverage and to update item count and delete items by right clicking in the UI interface |
+| 2024-07-4 |  v2.8   | added a confirmation window for the delete item function in the UI. a new function update_quantity In category_tree.py |
+
+### 6.2 Division of Labor within the Group
+
+### 6.3 Experimental Experience
+
+**Xinrui Zhang:**\
+This experiment deepened my understanding of data structures. By implementing linked lists, binary trees, and min heaps, I gained firsthand experience of the characteristics and application scenarios of different data structures. I was particularly impressed by how to choose appropriate data structures to improve efficiency when implementing the warehouse management system. This project not only reinforced my programming skills but also taught me how to apply abstract data structures to practical problems.
+
+**Jingxian Wu:**\
+As a computer science student, this experiment provided an excellent practical opportunity. By personally implementing various data structures and algorithms, I gained a more intuitive understanding of their working principles. Especially when dealing with large amounts of warehouse data, I deeply appreciated the importance of efficient data structures. This project also honed my problem analysis and solving skills, teaching me how to break down a complex system into smaller modules for implementation.
+
+**Zihao Wang:**\
+This experiment was full of challenges for me, as I wasn’t very familiar with data structures and algorithms before. However, through this project, I gradually understood concepts like linked lists, trees, and heaps, and learned how to use them to solve practical problems. Although I encountered many difficulties during the process, solving each problem gave me a great sense of achievement. This experience has increased my interest in programming and made me realize the importance of continuous learning.
+
+**Wenxiang Huang:**\
+As a student who prefers hands-on practice, I really enjoyed the process of implementing the warehouse management system. Through this project, I not only consolidated the theoretical knowledge learned in class but also learned how to integrate multiple modules into a complete system. During the implementation process, I also learned how to optimize code and improve system efficiency. This experience has given me a more comprehensive understanding of software development and strengthened my determination to pursue a related career in the future.
+
+**Han Xie:**\
+This project made me deeply realize the importance of teamwork. Although each person was responsible for different modules, we needed to communicate constantly to ensure that all parts could be integrated seamlessly. In the process of problem-solving, I learned how to better express my ideas and how to listen to and understand others’ perspectives. In addition to improving my technical skills, this experience greatly enhanced my communication and collaboration abilities, which will undoubtedly be very helpful for my future career development.
