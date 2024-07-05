@@ -48,3 +48,67 @@ This project revolves around the development of a smart warehouse management sys
   
 - **Log**: A log button has been added to the interactive interface to make it easy to view the operation of the item
 
+## 3.Design of Project
+
+The data structures we use in the project include linked lists, trees, and heaps. Firstly, we installed extensions to Python, Rainbow CSV, Code Runner, and Coverage Gutters in VsCode.The following image shows our directory file structure:
+
+<p align="center">
+    <img src="screenshot/图片1.png" alt="root directory">
+</p>
+
+### Linked List
+
+We designed a basic singly linked list supporting:
+
+- Addition
+- Removal
+- Update
+- Sorting
+- Iteration
+
+Linked lists offer fast insertion and deletion but slower search and sorting.
+
+### Storage Optimization
+
+To optimize storage, we:
+
+1. Categorized products into a tree by category.
+2. Used linked lists to store multiple products under each category.
+
+Recursive operations ensure the efficiency and correctness of the tree structure, enabling rapid search and sorting.
+
+### Tree Structure
+
+Within our tree structure, we implemented some methods:
+
+- Search by ID
+- Search by category
+- Search by name
+- Update item quantity
+
+### Minimum Heap
+
+We implemented a minimum heap to support:
+
+- Insertion
+- Extraction of minimum elements
+- Checking for emptiness
+
+This facilitates priority queues, task scheduling, and complete replenishment predictions.
+
+### GUI Integration
+
+Finally, we integrated these functionalities into a GUI interface within the main function. Creating a GUI interface using the tkenter library.This interface allows users to:
+
+- Add, delete, modify, and query warehouse items
+- Predict replenishments
+- Ensure data persistence
+- Interact seamlessly via button clicks
+
+This enhances both functionality and user experience.
+
+The following is a screenshot of our designed main interface:
+
+<p align="center">
+    <img src="screenshot/屏幕截图 2024-07-04 193133.png" alt="Screenshot of the main interface">
+</p>
