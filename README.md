@@ -613,3 +613,39 @@ def insert(self, category, item):
 ```
 
 After this operation, real-time information about newly added items can be found.
+
+### 5.2 Unit testing of code
+
+We conducted unit testing on the functions to verify their correctness and generate HTML coverage reports. We took the following steps:
+
+### Step 1: Run unit tests using coverage
+
+Run the following command to execute all unit tests and collect coverage data:
+
+``` bash
+coverage run -m unittest discover -s tests -p 'test_*.py'
+```
+
+This command uses coverage to execute unit tests found in files that match the test_ *. py pattern in the tests directory.
+
+### Step 2: Generate HTML Coverage Report
+
+After running the test, use the following command to generate the HTML Coverage Report:
+
+``` bash
+coverage HTML
+```
+
+This command creates an HTML report in the htmlcov directory that displays detailed coverage information, including which parts of the code repository were tested.
+
+### View Coverage Report
+
+Open the generated HTML report in the browser to view detailed coverage information:
+
+- Navigation to the htmlcov directory.
+
+- Open index.xml in the browser.
+
+This is a screenshot of test coverage:
+
+![test_coverage](screenshot/image.png "Test_Coverage")
