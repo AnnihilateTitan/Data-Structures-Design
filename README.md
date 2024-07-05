@@ -561,3 +561,55 @@ Code Optimization for Heapify-Down Operation in Heap
 - **Space efficiency**: Typically implemented using arrays, high space efficiency.
 
 - **Application**: Used to manage the priority queue of goods that need restocking.
+
+## 5.Running and Debugging of Project
+
+### 5.1 Difficulties in Code Running and Solutions
+
+#### 1.We encountered some errors during the module import process, such as when trying to import a module under the inventory package in the category_tree code, an error occurred
+
+So we added the following code:
+
+```python
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+sys.path.append(project_root)
+```
+
+Current dir stores the directory path of the current script file. Use the os. path. dirname() function to retrieve the parent directory of current dir, and append (project_root) to add the root directory path of the project to sys. path. This obtains the root directory of the project. Dynamically add the root directory of the project to the system path in this way, so that various modules and files within the project can be easily accessed at runtime.
+
+#### 2.When we were creating the GUI interface in the main function, we found that after adding a new item, we couldn't find it during the search
+
+So after checking, we found that we were looking for the tree we were using, but we only added the linked list to the linked list and did not update it to the tree, so it was not found. Therefore, we added the following line of code in the def add_item module:
+
+```python
+self.inventorys.insert(category,item)
+```
+
+At the same time, we have also added the inter function in category_tree.py, as follows:
+
+```python
+def insert(self, category, item):
+        if self.root is None:
+            self.root = TreeNode(category)
+            self.root.items.add_item(item)
+        else:
+            self._insert(self.root, category, item)
+    def _insert(self, node, category, item):
+        if category.value == node.category.value:
+            node.items.add_item(item)
+        elif category.value < node.category.value:
+            if node.left is None:
+                node.left = TreeNode(category)
+                node.left.items.add_item(item)
+            else:
+                self._insert(node.left, category, item)
+        else:
+            if node.right is None:
+                node.right = TreeNode(category)
+                node.right.items.add_item(item)
+            else:
+                self._insert(node.right, category, item)
+```
+
+After this operation, real-time information about newly added items can be found.
