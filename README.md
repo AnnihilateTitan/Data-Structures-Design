@@ -449,3 +449,115 @@ Code Optimization for Removing Items by ID in Category Tree
 - **Flexibility**: New categories can be easily added.
 
 - **Application**: Used to organize and quickly retrieve inventory items of different categories.
+
+### 4.3 MinHeap Implementation
+
+This is a min heap implementation that can be used to manage the priority of items needing restocking.
+
+#### 4.3.1 MinHeap class
+
+```python  
+class MinHeap:
+    def __init__(self):
+        self.heap = []
+```
+
+heap: uses a list to store heap elements.
+
+#### 4.3.2 Main methods
+
+**(a) insert(item)**:
+
+```python
+    def insert(self, item):
+        self.heap.append(item)
+        self._heapify_up(len(self.heap) - 1)
+```
+
+Adds a new element to the end of the heap, then performs a heapify-up operation.
+
+**(b) extract()**:
+
+ ```python
+    def extract(self):
+        if len(self.heap) == 0:
+            return None
+        if len(self.heap) == 1:
+            return self.heap.pop()
+        root = self.heap[0]
+        self.heap[0] = self.heap.pop()
+        self._heapify_down(0)
+        return root
+ ```
+
+Code Optimization for Extract Operation in Heap
+
+- **Heap Extraction Logic:**
+  - Removes and returns the top element from the heap.
+  - Returns `None` if the heap is empty.
+  - Directly removes and returns the element if there's only one element in the heap.
+
+- **Heap Adjustment Process:**
+  - Moves the last element of the heap to the top if there are more than one element.
+  - Performs a downward heapify operation to restructure the heap and maintain the heap property.
+
+- **Returning the Top Element:**
+  - Finally, returns the original top element of the heap after adjusting the heap structure.
+
+**(c) _heapify_up(index)**:
+
+  ```python
+    def _heapify_up(self, index):
+        parent_index = (index - 1) // 2
+        if index > 0 and self.heap[index] < self.heap[parent_index]:
+            self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]
+            self._heapify_up(parent_index)
+ ```
+
+Code Optimization for Heapify-Up Operation in Heap
+
+- **Comparison and Swap:**
+  - Compares the value of the current node with its parent node.
+  - If the current node is smaller than its parent (for a min-heap), swaps their positions.
+
+- **Recursive Adjustment:**
+  - Continues the comparison and swap recursively until the current node is greater than or equal to its parent.
+  - Stops when the current node reaches the top of the heap, ensuring the heap property is maintained.
+
+**(d) _heapify_down(index)**:
+
+```python
+    def _heapify_down(self, index):
+        left_child_index = 2 * index + 1
+        right_child_index = 2 * index + 2
+        smallest = index
+
+        if left_child_index < len(self.heap) and self.heap[left_child_index] < self.heap[smallest]:
+            smallest = left_child_index
+        if right_child_index < len(self.heap) and self.heap[right_child_index] < self.heap[smallest]:
+            smallest = right_child_index
+        if smallest != index:
+            self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
+            self._heapify_down(smallest)
+```
+
+Code Optimization for Heapify-Down Operation in Heap
+
+- **Comparison and Swap:**
+  - Compares the value of the current node with its left and right child nodes.
+  - Finds the smallest among the current node and its children (for a min-heap).
+  - If the smallest value is not the current node, swaps the current node with the child node corresponding to the smallest value.
+
+- **Recursive Adjustment:**
+  - Continues the comparison and swap recursively until the current node is smaller than or equal to its children.
+  - Stops when the current node reaches a leaf node, ensuring the heap property (min-heap) is maintained throughout the heap structure.
+
+#### 4.3.3 Advantages of MinHeap
+
+- **Priority management**: Able to quickly (O(1) time) retrieve the highest priority (minimum value) element.
+
+- **Efficiency**: Insertion and deletion operations have a time complexity of O(log n).
+
+- **Space efficiency**: Typically implemented using arrays, high space efficiency.
+
+- **Application**: Used to manage the priority queue of goods that need restocking.
