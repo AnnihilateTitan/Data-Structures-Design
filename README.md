@@ -53,7 +53,6 @@ This project revolves around the development of a smart warehouse management sys
 The data structures we use in the project include linked lists, trees, and heaps. Firstly, we installed extensions to Python, Rainbow CSV, Code Runner, and Coverage Gutters in VsCode.The following image shows our directory file structure:
 
 <p align="center">
-
     <img src="screenshot/图片1.png" alt="root directory">
 </p>
 
@@ -192,7 +191,6 @@ This code implements an efficient item search functionality in a category tree s
 **(c)remove_item(item_ID)**:
 
 ```python
-
     def remove_item(self, item_ID):
         current = self.head
         previous = None
@@ -219,7 +217,6 @@ This code implements the functionality to remove an element with a specified ite
 **(d)update_quantity(item_ID, quantity)**:
 
 ```python
-
     def update_quantity(self, item_ID, quantity):
         current = self.head
         while current:
@@ -227,7 +224,7 @@ This code implements the functionality to remove an element with a specified ite
                 current.item.quantity = quantity
                 return
             current = current.next
-  ```
+```
 
 This code snippet updates the quantity of an item with a specific ID in a linked list.
 
@@ -242,7 +239,6 @@ This code snippet updates the quantity of an item with a specific ID in a linked
 **(e)sort_by_id()**:
 
 ```python
-
     def sort_by_id(self):
         if not self.head or not self.head.next:
             return
