@@ -98,7 +98,7 @@ This facilitates priority queues, task scheduling, and complete replenishment pr
 
 ### GUI Integration
 
-Finally, we integrated these functionalities into a GUI interface within the main function. Creating a GUI interface using the tkenter library.This interface allows users to:
+Finally, we integrated these functionalities into a GUI interface within the main function. Creating a GUI interface using the tkinter library.This interface allows users to:
 
 - Add, delete, modify, and query warehouse items
 - Predict replenishments
@@ -613,6 +613,19 @@ def insert(self, category, item):
 ```
 
 After this operation, real-time information about newly added items can be found.
+
+#### 3.In the search function of GUI, we found that if we first modify the number of items and then search, the number of items will not change
+
+We checking the main function code, we found that it was due to the lack of updating the number of items in the node of category_tree. Therefore, we added a function ‘update_quantity’ to update the number of items in the category tree code, which solved this problem.
+
+```python
+    def update_quantity(self, item_id, new_quantity):
+        item = self.find_by_id(item_id)
+        if item is not None:
+            item.quantity = new_quantity
+            return True
+        return False
+```
 
 ### 5.2 Unit testing of code
 
