@@ -672,11 +672,57 @@ This is a screenshot of test coverage:
 | 2024-07-4 |  v2.8   | added a confirmation window for the delete item function in the UI. a new function update_quantity In category_tree.py |
 
 ### 6.2 Division of Labor within the Group
+#### Zhang Xinrui:
+- Organized the team to complete the project
+- Wrote `item.py`
+- Structured the entire project file system
+- Implemented some methods in `category_tree.py` and fixed bugs in the search functionality
+- Added features to the UI in `main.py` (search by ID, right-click functionality in the inventory display interface)
+- Wrote part of the unit tests
+- Tested the code and fixed bugs
+- Wrote the project report
+- Created the presentation PPT
 
+#### Xie Han:
+- Completed the remaining parts of `linked_list.py`
+- Implemented some methods in `category_tree.py`
+- Added features to the UI in `main.py` (search by name, display inventory by category)
+- Wrote part of the unit tests
+- Tested the code and fixed bugs
+- Wrote the project report
+- Created the presentation PPT
+
+#### Huang Wenxiang:
+- Implemented part of `category_tree.py` (constructed the tree storage structure)
+- Added features to the UI in `main.py` (search by category, display inventory)
+- Wrote part of the unit tests
+- Tested the code and fixed bugs
+- Wrote the project report
+- Created the presentation PPT
+
+#### Wang Zihao:
+- Wrote `priority_queue.py` and `restock.py`
+- Wrote part of the unit tests
+- Structured the entire project file system
+- Implemented some methods in `category_tree.py` and fixed bugs in the search functionality
+- Added features to the UI in `main.py` (output predicted restock queue, remove items)
+- Tested the code and fixed bugs
+- Wrote the project report
+- Created the presentation PPT
+
+#### Wu Jingxian:
+- Completed the remaining parts of `category_tree.py`
+- Wrote `loader.py`
+- Implemented some functionalities in `linked_list.py`
+- Added UI features in `main.py` (add items, update item quantities, log output)
+- Wrote part of the unit tests
+- Tested the code and fixed bugs
+- Wrote the project report
+- Created the presentation PPT
 ### 6.3 Experimental Experience
 
 **Xinrui Zhang:**\
-This experiment deepened my understanding of data structures. By implementing linked lists, binary trees, and min heaps, I gained firsthand experience of the characteristics and application scenarios of different data structures. I was particularly impressed by how to choose appropriate data structures to improve efficiency when implementing the warehouse management system. This project not only reinforced my programming skills but also taught me how to apply abstract data structures to practical problems.
+This experiment deepened my understanding of data structures. By implementing linked lists, binary trees, and min heaps, I gained firsthand experience of the characteristics and application scenarios of different data structures. I was particularly impressed by how to choose appropriate data structures to improve efficiency when implementing the warehouse management system. This project not only reinforced my programming skills but also taught me how to apply abstract data structures to practical problems. By writing the UI, I also learned that a user-friendly project requires providing users with a user-friendly interface, which would be a good practice
 
 **Jingxian Wu:**\
 As a computer science student, this experiment provided an excellent practical opportunity. By personally implementing various data structures and algorithms, I gained a more intuitive understanding of their working principles. Especially when dealing with large amounts of warehouse data, I deeply appreciated the importance of efficient data structures. This project also honed my problem analysis and solving skills, teaching me how to break down a complex system into smaller modules for implementation.
