@@ -50,7 +50,11 @@ This project revolves around the development of a smart warehouse management sys
 
 ## 3.Design of Project
 
-We utilized linked lists, trees, and heaps in our project.
+The data structures we use in the project include linked lists, trees, and heaps. Firstly, we installed extensions to Python, Rainbow CSV, Code Runner, and Coverage Gutters in VsCode.The following image shows our directory file structure:
+
+<p align="center">
+    <img src="screenshot/图片1.png" alt="root directory">
+</p>
 
 ### Linked List
 
@@ -94,7 +98,7 @@ This facilitates priority queues, task scheduling, and complete replenishment pr
 
 ### GUI Integration
 
-Finally, we integrated these functionalities into a GUI interface within the main function. This interface allows users to:
+Finally, we integrated these functionalities into a GUI interface within the main function. Creating a GUI interface using the tkenter library.This interface allows users to:
 
 - Add, delete, modify, and query warehouse items
 - Predict replenishments
@@ -102,6 +106,12 @@ Finally, we integrated these functionalities into a GUI interface within the mai
 - Interact seamlessly via button clicks
 
 This enhances both functionality and user experience.
+
+The following is a screenshot of our designed main interface:
+
+<p align="center">
+    <img src="screenshot/屏幕截图 2024-07-04 193133.png" alt="Screenshot of the main interface">
+</p>
 
 ## 4. Implementation of Project
 
@@ -663,7 +673,7 @@ This is a screenshot of test coverage:
 
 ### 6.2 Division of Labor within the Group
 
-### 6.3 Tips
+### 6.3 Experimental Experience
 
 **Xinrui Zhang:**\
 This experiment deepened my understanding of data structures. By implementing linked lists, binary trees, and min heaps, I gained firsthand experience of the characteristics and application scenarios of different data structures. I was particularly impressed by how to choose appropriate data structures to improve efficiency when implementing the warehouse management system. This project not only reinforced my programming skills but also taught me how to apply abstract data structures to practical problems.
